@@ -3,61 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <title>Weather App</title>
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
-  background: #222;
-  font-family: Arial;
-}
+      background: #222;
+      font-family: Arial;
+      margin: 0;
+    }
 
-.card {
-  width: 350px;
-  margin: 100px auto;
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  background: linear-gradient(135deg, #00feba, #5b548a);
-  color: white;
-}
+    .card {
+      width: 90%;
+      max-width: 350px;
+      margin: 80px auto;
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #00feba, #5b548a);
+      color: white;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
 
-.search {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
+    .search {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
 
-.search input {
-  padding: 10px;
-  border-radius: 20px;
-  border: none;
-  width: 70%;
-}
+    .search input {
+      padding: 10px;
+      border-radius: 20px;
+      border: none;
+      width: 70%;
+      font-size: 16px;
+    }
 
-.search button {
-  padding: 10px;
-  border-radius: 50%;
-  border: none;
-  margin-left: 10px;
-  cursor: pointer;
-}
+    .search button {
+      padding: 10px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
 
-.icon {
-  width: 100px;
-}
+    .search button:hover {
+      background: #ddd;
+    }
 
-.temp {
-  font-size: 50px;
-}
+    .icon {
+      width: 80px;
+    }
 
-.details {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
+    .temp {
+      font-size: 40px;
+      margin: 10px 0;
+    }
+
+    .city {
+      font-size: 22px;
+    }
+
+    .details {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .col {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .col img {
+      width: 30px;
+    }
+
+    /* 📱 Mobile */
+    @media (max-width: 480px) {
+      .temp {
+        font-size: 30px;
+      }
+
+      .city {
+        font-size: 18px;
+      }
+
+      .details {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
 <div class="card">
+
   <div class="search">
     <input type="text" id="city" placeholder="Enter city name">
     <button onclick="getWeather()">🔍</button>
@@ -65,25 +113,36 @@
 
   <div class="weather">
     <img src="https://cdn-icons-png.flaticon.com/512/1163/1163661.png" class="icon">
+    
     <h1 class="temp">--°C</h1>
     <h2 class="city">City</h2>
 
     <div class="details">
-      <div>
-        
-        <p class="humidity">--%</p>
-        <span>Humidity</span>
+
+      <div class="col">
+        <img src="https://cdn-icons-png.flaticon.com/512/728/728093.png">
+        <div>
+          <p class="humidity">--%</p>
+          <span>Humidity</span>
+        </div>
       </div>
-      <div>
-        <p class="wind">-- km/h</p>
-        <span>Wind Speed</span>
+
+  
+      <div class="col">
+        <img src="https://cdn-icons-png.flaticon.com/512/553/553416.png">
+        <div>
+          <p class="wind">-- km/h</p>
+          <span>Wind Speed</span>
+        </div>
       </div>
+
     </div>
   </div>
+
 </div>
 
-<script >
-    const apiKey = "cd8895fc33013954abde163cc1bb2317";
+<script>
+const apiKey = "YOUR_API_KEY_HERE"; // 🔑 put your key
 
 async function getWeather() {
   const city = document.getElementById("city").value;
@@ -93,14 +152,14 @@ async function getWeather() {
     return;
   }
 
+  document.querySelector(".temp").innerHTML = "Loading...";
+
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
   const response = await fetch(url);
   const data = await response.json();
 
-  console.log(data); // 👈 DEBUG
-
-  if (data.cod !== 200) {
+  if (data.cod != 200) {
     alert("City not found");
     return;
   }
@@ -110,6 +169,14 @@ async function getWeather() {
   document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
   document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
 }
+
+
+document.getElementById("city").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    getWeather();
+  }
+});
 </script>
+
 </body>
 </html>
